@@ -25,5 +25,8 @@ try:
         elif response == "Obstacle_Detected":
             playsound("/home/kshitij/RPI_Voice_Alerts/Obstacle/obstacle_detected_Alice.wav")
             print(response)
+        elif response == "battery_low":
+            playsound("/home/kshitij/RPI_Voice_Alerts/low_battery/low_battery_Alice.wav")
+            print(response)    
 except KeyboardInterrupt:
     print("Close Serial Communication. ")
