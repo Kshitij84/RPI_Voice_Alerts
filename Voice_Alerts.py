@@ -1,4 +1,17 @@
-#!/usr//bin/env python3
+#!/usr/bin/env python3
+# 
+# This Python script communicates with a serial device an Arduino and listens for specific updates.
+# It checks for three types of responses:
+# 1. "Emergency_Pressed": Plays an emergency alert sound.
+# 2. "Obstacle_Detected": Plays an obstacle detection alert sound.
+# 3. "battery_low": Plays a low battery alert sound.
+#
+# The serial communication is established via '/dev/ttyUSB0' at a baud rate of 115200.
+# The system volume is set to 100% using the pyvolume module, and the responses are processed
+# by reading data from the serial port and triggering audio alerts accordingly.
+# The script runs in an infinite loop and can be stopped by a keyboard interrupt (Ctrl+C).
+# 
+
 import serial
 import time
 from playsound import playsound
@@ -29,4 +42,4 @@ try:
             playsound("/home/kshitij/RPI_Voice_Alerts/low_battery/low_battery_Alice.wav")
             print(response)    
 except KeyboardInterrupt:
-    print("Close Serial Communication. ")
+    print("Close Serial Communication.")
