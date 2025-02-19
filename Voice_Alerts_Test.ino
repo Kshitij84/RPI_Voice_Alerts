@@ -7,6 +7,12 @@
   
   The emergency button is debounced to avoid multiple presses being detected due to noise or quick fluctuations.
   The program communicates the status via the Serial Monitor.
+
+  Changes:
+  - If emergency is pressed, and battery is low, it will print "Emergency_Pressed", wait 1 second, then print "battery_low".
+  - If emergency is pressed, obstacle detection is ignored.
+  - If only the battery is low, it prints "battery_low".
+  - A 1-second delay is added after every serial print to make the output readable.
 */
 
 const int Emergency_button = 2;  // Emergency button pin
@@ -61,6 +67,7 @@ void loop() {
       // If the button was pressed
       if (Emergency_button_state == HIGH) {
         Serial.println("Emergency_Pressed");
+        delay(1000);  // 1 second delay
       }
     }
   }
@@ -71,22 +78,32 @@ void loop() {
   // Read the potentiometer value
   PotValue = analogRead(pot);
 
-  // Check if emergency button is pressed
-  if (Emergency_button_state == HIGH) {
+  // If emergency button is pressed and battery is low
+  if (Emergency_button_state == HIGH && PotValue < 40) {
     Serial.println("Emergency_Pressed");
-    delay(1000);  // Optional delay for readability
+    delay(1000);  // 1 second delay
+    Serial.println("battery_low");
+    delay(1000);  // 1 second delay
   }
-  // Check if an obstacle is detected (distance < 15 cm)
-  else if (distance < 15) {
+  // If emergency button is pressed, ignore obstacle detection
+  else if (Emergency_button_state == HIGH) {
+    // Ignore obstacle detection when emergency button is pressed
+    Serial.println("Emergency_Pressed");
+    delay(1000);  // 1 second delay
+  }
+  // Check if an obstacle is detected (distance < 15 cm) and emergency is not pressed
+  else if (distance < 15 && Emergency_button_state == LOW) {
     Serial.println("Obstacle_Detected");
-  }
-  // Check if battery is low (potentiometer value < 40)
+    delay(1000);  // 1 second delay
+  } 
+  // If battery is low, print "battery_low" regardless of the emergency button state
   else if (PotValue < 40) {
     Serial.println("battery_low");
+    delay(1000);  // 1 second delay
   } 
   // If no conditions are met, print normal status
   else {
     Serial.println("Emergency not pressed, Obstacle not detected, battery not low");
-    delay(1000);  // Add a delay to reduce the frequency of messages
+    delay(1000);  // 1 second delay
   }
 }
